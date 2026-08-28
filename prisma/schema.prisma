@@ -231,7 +231,8 @@ model User {
   notifications Notification[]
   auditLogs     AuditLog[]
   apiKeys       ApiKey[]
-  credentials   PasskeyCredential[]
+  credentials         PasskeyCredential[]
+  passkeyChallenges   PasskeyChallenge[]
 
   @@index([organizationId])
   @@index([status])
@@ -637,12 +638,31 @@ model PasskeyCredential {
   publicKey    String
   counter      Int      @default(0)
   deviceName   String?
+  userAgent    String?
   createdAt    DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@map("passkey_credentials")
+}
+
+// ---------------------------------------------------------------------------
+// Passkey challenge  (temporary storage for WebAuthn registration ceremonies)
+// ---------------------------------------------------------------------------
+
+model PasskeyChallenge {
+  id        String   @id @default(uuid(7))
+  userId    String
+  challenge String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("passkey_challenges")
 }
 
 // ---------------------------------------------------------------------------
