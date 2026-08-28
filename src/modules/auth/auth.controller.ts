@@ -19,7 +19,6 @@ import { ThrottleTierDecorator } from '../../common/decorators/throttle-tier.dec
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { AuthenticatedUser } from '../../common/interfaces/authenticated-user.interface';
 import {
-  NotImplementedException,
   UnauthorizedException,
 } from '../../common/exceptions/domain.exception';
 
@@ -85,35 +84,8 @@ export class AuthController {
     return this.authService.me(user);
   }
 
-  @Public()
-  @Post('passkey/register')
-  @ThrottleTierDecorator('auth')
-  @ApiOperation({
-    summary: 'Begin WebAuthn passkey registration',
-    description:
-      'Not implemented yet: requires the @simplewebauthn/server package and a ' +
-      'configured relying party (PASSKEY_RP_ID / PASSKEY_ORIGIN). See user_task.md.',
-  })
-  passkeyRegister(): never {
-    throw new NotImplementedException(
-      'Passkey registration is not implemented yet — install @simplewebauthn/server and configure the relying party.',
-    );
-  }
-
-  @Public()
-  @Post('passkey/verify')
-  @ThrottleTierDecorator('auth')
-  @ApiOperation({
-    summary: 'Verify a WebAuthn passkey assertion',
-    description:
-      'Not implemented yet: requires the @simplewebauthn/server package and a ' +
-      'configured relying party (PASSKEY_RP_ID / PASSKEY_ORIGIN). See user_task.md.',
-  })
-  passkeyVerify(): never {
-    throw new NotImplementedException(
-      'Passkey verification is not implemented yet — install @simplewebauthn/server and configure the relying party.',
-    );
-  }
+  // Passkey endpoints have moved to PasskeyController under /auth/passkey/*.
+  // See src/modules/auth/controllers/passkey.controller.ts
 
   /** Extracts best-effort device metadata for session records. */
   private sessionContext(req: Request) {
